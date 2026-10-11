@@ -71,20 +71,18 @@ const CountdownManager = {
 };
 
 /* ==========================================================================
-   2. СЧЕТЧИК ГОЛОСОВ: СТРОГО С 0 И КОНФЕТТИ
+   2. СЧЕТЧИК ГОЛОСОВ: СТРОГО С 0 И ПОДКЛЮЧЕНИЕ К POSTGRESQL (NETLIFY / NEON)
    ========================================================================== */
 const VoteManager = {
-  baseVotes: 0,
+  apiUrl: '/api/votes',
+  syncIntervalMs: 25000,
+  syncTimer: null,
+  isSyncing: false,
 
   init() {
-    const stored = localStorage.getItem('candidate_votes_count');
-    if (stored === null || parseInt(stored, 10) > 10) {
-      const userVoted = localStorage.getItem('user_has_voted') === 'true';
-      const initial = userVoted ? 1 : 0;
-      localStorage.setItem('candidate_votes_count', initial);
-    }
-
     this.updateUI();
+    this.fetchLiveVotes();
+    this.startPeriodicSync();
 
     const mainBtn = document.getElementById('votePrimaryBtn');
     const navBtn = document.getElementById('voteNavBtn');
@@ -107,24 +105,81 @@ const VoteManager = {
     return stored !== null ? parseInt(stored, 10) : 0;
   },
 
-  handleVoteToggle() {
+  setVoteCount(count) {
+    localStorage.setItem('candidate_votes_count', Math.max(0, count));
+    this.updateUI();
+  },
+
+  async fetchLiveVotes() {
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data.count === 'number') {
+          this.setVoteCount(data.count);
+        }
+      }
+    } catch (e) {
+      console.warn('Live votes fetch skipped (offline/static):', e.message);
+    }
+  },
+
+  startPeriodicSync() {
+    if (this.syncTimer) clearInterval(this.syncTimer);
+    this.syncTimer = setInterval(() => {
+      if (!this.isSyncing) {
+        this.fetchLiveVotes();
+      }
+    }, this.syncIntervalMs);
+  },
+
+  async handleVoteToggle() {
+    if (this.isSyncing) return;
+    this.isSyncing = true;
+
     const voted = this.hasVoted();
     let count = this.getVoteCount();
+    const action = voted ? 'unvote' : 'vote';
 
+    // Оптимистичный отклик в интерфейсе
     if (!voted) {
       localStorage.setItem('user_has_voted', 'true');
       count += 1;
-      localStorage.setItem('candidate_votes_count', count);
+      this.setVoteCount(count);
       this.triggerConfetti();
       Toast.show('Твой голос за кандидата зафиксирован! 🎉');
     } else {
       localStorage.setItem('user_has_voted', 'false');
       count = Math.max(0, count - 1);
-      localStorage.setItem('candidate_votes_count', count);
+      this.setVoteCount(count);
       Toast.show('Голос отозван');
     }
 
-    this.updateUI();
+    // Запись в базу данных PostgreSQL
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ action })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data.count === 'number') {
+          this.setVoteCount(data.count);
+        }
+      }
+    } catch (err) {
+      console.warn('Database vote write notice:', err.message);
+    } finally {
+      this.isSyncing = false;
+    }
   },
 
   updateUI() {
