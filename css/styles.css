@@ -1,0 +1,461 @@
+/* ==========================================================================
+   Школьные Выборы 2026 — «Агитплакат»
+   Смелая плакатная типографика, тёплая бумага, чернильный синий и
+   сигнальный оранжевый. Наполнение сайта не меняется — только подача.
+   ========================================================================== */
+
+:root {
+  --font-display: 'Unbounded', 'Manrope', system-ui, sans-serif;
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --ink: #0a1440;
+  --navy: #112576;
+  --cobalt: #253ea1;
+  --sky: #9db8ff;
+  --paper: #f4f0e6;
+  --paper-deep: #ebe5d6;
+  --signal: #ff4d1f;
+  --signal-deep: #e03a0e;
+  --line: rgba(10, 20, 64, 0.14);
+  --emerald: #0f9d6b;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Бумажное зерно поверх всего сайта */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--signal);
+  color: #ffffff;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Подсветка-маркер под словами */
+.marker {
+  position: relative;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+.marker::after {
+  content: '';
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  bottom: 0.06em;
+  height: 0.38em;
+  background: var(--signal);
+  z-index: -1;
+  transform: skewX(-8deg);
+}
+
+/* Надпись-метка секции */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 2px;
+  background: currentColor;
+}
+
+/* Плакатная карточка с жёсткой тенью */
+.poster-card {
+  background-color: #fffdf8;
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 0 var(--ink);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.poster-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 0 var(--ink);
+}
+
+/* Шапка */
+.site-header {
+  background-color: rgba(244, 240, 230, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--ink);
+}
+
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.25rem;
+  height: 2px;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Главная кнопка */
+.btn-primary {
+  background-color: var(--signal);
+  color: #ffffff;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 0 var(--ink);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--signal-deep);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--ink);
+}
+
+.btn-primary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 0 var(--ink);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: inherit;
+  border: 2px solid currentColor;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.btn-ghost:hover {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+.on-dark .btn-ghost:hover {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+/* Состояние «уже проголосовал» */
+.is-voted,
+.is-voted:hover {
+  background-color: var(--emerald) !important;
+  color: #ffffff !important;
+}
+
+/* HERO: тёмный плакат с сеткой */
+.hero {
+  background-color: var(--ink);
+  color: var(--paper);
+  background-image:
+    linear-gradient(rgba(157, 184, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 184, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(ellipse at 85% 10%, rgba(255, 77, 31, 0.35), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgba(37, 62, 161, 0.7), transparent 60%);
+  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%;
+}
+
+/* Фото кандидата в рамке-плакате */
+.photo-poster {
+  position: relative;
+  background: var(--paper);
+  border: 2px solid var(--paper);
+  padding: 0.75rem 0.75rem 0;
+  box-shadow: 10px 10px 0 0 var(--signal);
+  transform: rotate(-2deg);
+  transition: transform 300ms ease;
+}
+
+.photo-poster:hover {
+  transform: rotate(0deg);
+}
+
+/* Вращающийся штамп */
+.stamp {
+  position: absolute;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 9999px;
+  background: var(--signal);
+  color: #ffffff;
+  border: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.stamp svg {
+  position: absolute;
+  inset: 0.35rem;
+  width: calc(100% - 0.7rem);
+  height: calc(100% - 0.7rem);
+  animation: spin 18s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Бегущая строка */
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-flex;
+  gap: 3rem;
+  padding-right: 3rem;
+  animation: ticker 32s linear infinite;
+}
+
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+
+/* Табы программы */
+.prog-tab-btn {
+  border: 2px solid var(--ink);
+  background: #fffdf8;
+  color: var(--ink);
+  transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.prog-tab-btn:hover {
+  transform: translateY(-1px);
+}
+
+.prog-tab-btn.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 0 var(--signal);
+}
+
+/* Карточки шагов программы */
+.prog-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.prog-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--accent, var(--signal));
+}
+
+.step-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
+  opacity: 0.18;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+
+.prog-card:hover .step-num {
+  opacity: 1;
+  color: var(--accent, var(--signal));
+  -webkit-text-stroke-color: var(--accent, var(--signal));
+}
+
+.step-note {
+  border-left: 3px solid var(--line);
+  padding: 0.25rem 0 0.25rem 0.85rem;
+}
+
+.step-note.is-accent {
+  border-left-color: var(--accent, var(--signal));
+  background: color-mix(in srgb, var(--accent, var(--signal)) 8%, transparent);
+  padding: 0.6rem 0.85rem;
+}
+
+/* Слайдер калькулятора */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 32px;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--paper-deep);
+  border: 2px solid var(--ink);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: var(--signal);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  margin-top: -11px;
+  transition: transform 140ms ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--paper-deep);
+  border: 2px solid var(--ink);
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  background: var(--signal);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* Опрос */
+.poll-vote-btn {
+  border: 2px solid var(--ink);
+  background: #fffdf8;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.poll-vote-btn:not(:disabled):hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--ink);
+}
+
+.poll-vote-btn.is-selected {
+  box-shadow: 4px 4px 0 0 var(--signal);
+}
+
+.poll-bar {
+  background: repeating-linear-gradient(-45deg, rgba(17, 37, 118, 0.16) 0 8px, rgba(17, 37, 118, 0.08) 8px 16px);
+}
+
+.poll-vote-btn.is-selected .poll-bar {
+  background: repeating-linear-gradient(-45deg, rgba(255, 77, 31, 0.28) 0 8px, rgba(255, 77, 31, 0.14) 8px 16px);
+}
+
+/* Поля формы */
+.field {
+  width: 100%;
+  background: #fffdf8;
+  border: 2px solid var(--ink);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  transition: box-shadow 140ms ease;
+}
+
+.field::placeholder {
+  color: rgba(10, 20, 64, 0.4);
+}
+
+.field:focus {
+  outline: none;
+  box-shadow: 4px 4px 0 0 var(--signal);
+}
+
+/* Появление блоков при прокрутке */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track, .stamp svg { animation: none; }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Печать листовки на стенд */
+@media print {
+  .no-print, header, footer, #mobileBar, #toastNotification, .ticker {
+    display: none !important;
+  }
+  body::before { display: none; }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .poster-card {
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+/* Подъём карточек при наведении после анимации появления */
+.js .poster-card.reveal.is-visible:hover {
+  transform: translate(-2px, -2px);
+}

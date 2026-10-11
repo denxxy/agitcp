@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Александр Припачкин — Кандидат в Президенты Школы | Выборы 2026</title>
+  <meta name="description" content="Официальный сайт предвыборной кампании кандидата в президенты школьного самоуправления. 9 реальных шагов программы: столовая без очередей, банк знаний, защита прав и турниры.">
+  <meta name="theme-color" content="#0a1440">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Александр Припачкин — Кандидат в Президенты Школы">
+  <meta property="og:description" content="Реальные дела. Честный диалог. Твой голос. 9 шагов предвыборной программы.">
+  <meta property="og:type" content="website">
+
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Google Fonts: Unbounded (заголовки), Manrope (текст), JetBrains Mono (цифры) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Manrope', 'system-ui', 'sans-serif'],
+            display: ['Unbounded', 'Manrope', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: '#0a1440',
+            navy: '#112576',
+            cobalt: '#253ea1',
+            sky: '#9db8ff',
+            paper: '#f4f0e6',
+            paperdeep: '#ebe5d6',
+            signal: '#ff4d1f',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons & Canvas Confetti -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-paper text-ink font-sans min-h-screen antialiased pb-24 md:pb-0">
+
+  <!-- ВЕРХНЯЯ СТРОКА ОПОВЕЩЕНИЯ -->
+  <aside class="bg-signal text-white text-[11px] sm:text-xs font-bold py-2 px-4 border-b-2 border-ink">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+      <span class="hidden md:inline font-mono uppercase tracking-wider">Официальная кампания • Выборы в Школьный Совет 2026</span>
+      <span class="mx-auto md:mx-0 font-extrabold flex items-center gap-2 text-center">
+        <span class="w-2 h-2 rounded-full bg-white animate-pulse shrink-0"></span>
+        <span>Реальные дела вместо пустых сказок. Голосуй за свой комфорт в школе!</span>
+      </span>
+      <a href="#program" class="hidden md:inline font-mono uppercase tracking-wider underline underline-offset-4 decoration-2 hover:text-ink transition">9 шагов платформы →</a>
+    </div>
+  </aside>
+
+  <!-- ШАПКА -->
+  <header class="sticky top-0 z-40 w-full site-header">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-[4.5rem] flex items-center justify-between gap-4">
+
+      <a href="#" class="flex items-center gap-3 shrink-0 group" title="На главную">
+        <div class="w-11 h-11 rounded-full bg-ink text-signal flex items-center justify-center border-2 border-ink group-hover:bg-signal group-hover:text-white transition-colors shrink-0">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display text-sm sm:text-base font-extrabold uppercase leading-tight">
+            Александр Припачкин
+          </span>
+          <span class="font-mono text-[10px] font-bold text-ink/60 uppercase tracking-[0.14em]">
+            Кандидат в Президенты Школы
+          </span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center text-xs font-extrabold uppercase tracking-wider">
+        <a href="#about" class="nav-link">О кандидате</a>
+        <a href="#program" class="nav-link">9 шагов</a>
+        <a href="#calculator" class="nav-link">Столовая</a>
+        <a href="#poll" class="nav-link">Опрос</a>
+        <a href="#suggestions" class="nav-link">Штаб</a>
+      </nav>
+
+      <button id="voteNavBtn" class="btn-primary px-4 sm:px-5 py-2.5 rounded-full text-xs uppercase flex items-center gap-1.5 shrink-0">
+        <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
+        <span class="vote-btn-text">Поддержать</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero on-dark relative overflow-hidden border-b-2 border-ink">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+
+        <!-- Левая колонка -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+
+          <div class="eyebrow text-sky">Выборы в Школьное Самоуправление • 2026</div>
+
+          <h1 class="font-display text-[2.1rem] leading-[1.05] sm:text-5xl lg:text-[4.1rem] font-black uppercase">
+            Реальные дела.<br>
+            <span class="text-sky">Честный диалог.</span><br>
+            <span class="marker">Твой голос.</span>
+          </h1>
+
+          <p class="text-lg sm:text-xl font-extrabold text-paper leading-snug">
+            «Чем больше контроль, тем больше сопротивление»
+          </p>
+
+          <p class="text-sm sm:text-base text-paper/70 leading-relaxed max-w-xl mx-auto lg:mx-0">
+            При строгой администрации популистские лозунги закроют в первый же день. Моя цель — решить реальные бытовые боли школы через честные переговоры и силу нашего актива.
+          </p>
+
+          <div class="pt-1 flex flex-wrap items-center justify-center lg:justify-start gap-3">
+            <button id="votePrimaryBtn" class="w-full sm:w-auto btn-primary px-7 py-4 rounded-full text-sm sm:text-base uppercase flex items-center justify-center gap-2.5">
+              <i data-lucide="thumbs-up" class="w-4 h-4"></i>
+              <span class="vote-btn-text">Отдать свой голос</span>
+            </button>
+
+            <a href="#program" class="w-full sm:w-auto btn-ghost px-6 py-4 rounded-full text-sm uppercase flex items-center justify-center gap-2">
+              <i data-lucide="check-square" class="w-4 h-4"></i>
+              <span>9 шагов программы</span>
+            </a>
+          </div>
+
+          <!-- Счетчики -->
+          <div class="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-px bg-paper/20 border border-paper/20 rounded-2xl overflow-hidden text-left">
+            <div class="bg-ink/80 p-4 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-full bg-signal text-white flex items-center justify-center shrink-0">
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-sky">Поддержали кандидата:</div>
+                <div class="font-display text-2xl font-extrabold text-paper">
+                  <span data-vote-count>0</span> <span class="font-sans text-xs font-bold text-paper/60">человек</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-ink/80 p-4 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-full bg-paper text-ink flex items-center justify-center shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-sky">До дебатов и выборов:</div>
+                <div class="font-mono text-base sm:text-lg font-extrabold text-paper">
+                  <span id="timerDays">03</span><span class="text-paper/50">д</span> : <span id="timerHours">14</span><span class="text-paper/50">ч</span> : <span id="timerMinutes">28</span><span class="text-paper/50">м</span> : <span id="timerSeconds">15</span><span class="text-paper/50">с</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Правая колонка: фото-плакат -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative w-full max-w-sm">
+
+            <div class="stamp -top-8 -right-3 sm:-right-8" aria-hidden="true">
+              <svg viewBox="0 0 100 100">
+                <defs>
+                  <path id="stampCircle" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/>
+                </defs>
+                <text font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="800" letter-spacing="2.4" fill="#ffffff">
+                  <textPath href="#stampCircle">ВЫБОРЫ 2026 • ТВОЙ ГОЛОС •</textPath>
+                </text>
+              </svg>
+              <i data-lucide="thumbs-up" class="w-7 h-7"></i>
+            </div>
+
+            <div class="photo-poster rounded-2xl text-ink">
+              <div class="w-full h-72 sm:h-80 rounded-xl overflow-hidden bg-ink">
+                <img id="candidatePhoto" src="images/candidate-photo.jpg" alt="Александр Припачкин — фото кандидата" class="w-full h-full object-cover object-top">
+              </div>
+
+              <div class="py-4 px-1 space-y-3">
+                <div class="text-center space-y-1">
+                  <h2 class="font-display text-xl sm:text-2xl font-black uppercase leading-tight">
+                    Александр Припачкин
+                  </h2>
+                  <p class="font-mono text-[11px] font-bold text-signal uppercase tracking-[0.14em]">
+                    Кандидат в Президенты Совета
+                  </p>
+                </div>
+
+                <div class="grid grid-cols-2 border-2 border-ink rounded-xl overflow-hidden text-center">
+                  <div class="p-2 border-r-2 border-ink">
+                    <span class="block font-mono text-[10px] font-bold text-ink/50 uppercase">Статус</span>
+                    <span class="font-extrabold text-xs">10 Класс</span>
+                  </div>
+                  <div class="p-2">
+                    <span class="block font-mono text-[10px] font-bold text-ink/50 uppercase">Команда</span>
+                    <span class="font-extrabold text-xs">Школьный актив</span>
+                  </div>
+                </div>
+
+                <button id="voteCardBtn" class="w-full py-3 rounded-xl bg-ink hover:bg-cobalt text-paper font-extrabold text-xs uppercase tracking-wider transition">
+                  <span class="vote-btn-text">Отдать голос за кандидата 👍</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- БЕГУЩАЯ СТРОКА -->
+  <div class="ticker bg-paper border-b-2 border-ink py-3.5 font-display text-sm sm:text-base font-extrabold uppercase" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Реальные дела</span><span class="text-signal">✦</span>
+      <span>Честный диалог</span><span class="text-signal">✦</span>
+      <span>Твой голос</span><span class="text-signal">✦</span>
+      <span>Реальные дела</span><span class="text-signal">✦</span>
+      <span>Честный диалог</span><span class="text-signal">✦</span>
+      <span>Твой голос</span><span class="text-signal">✦</span>
+      <span>Реальные дела</span><span class="text-signal">✦</span>
+      <span>Честный диалог</span><span class="text-signal">✦</span>
+      <span>Твой голос</span><span class="text-signal">✦</span>
+      <span>Реальные дела</span><span class="text-signal">✦</span>
+      <span>Честный диалог</span><span class="text-signal">✦</span>
+      <span>Твой голос</span><span class="text-signal">✦</span>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 space-y-20 sm:space-y-28">
+
+    <!-- О КАНДИДАТЕ -->
+    <section id="about" class="space-y-10">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end reveal">
+        <div class="lg:col-span-7 space-y-3">
+          <div class="eyebrow text-signal">О кандидате</div>
+          <h2 class="font-display text-3xl sm:text-5xl font-black uppercase leading-[1.05]">
+            Проверенный лидер. <span class="marker">Твой голос.</span>
+          </h2>
+        </div>
+        <p class="lg:col-span-5 text-sm sm:text-base text-ink/70 font-medium leading-relaxed">
+          Школьное самоуправление — это не про показуху и отчетные плакаты, а про реальный диалог с администрацией и ежедневный комфорт учеников.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="poster-card rounded-2xl p-6 sm:p-7 space-y-4 reveal">
+          <div class="flex items-center justify-between">
+            <div class="w-14 h-14 rounded-full bg-sky/40 border-2 border-ink flex items-center justify-center text-2xl">🤝</div>
+            <span class="font-mono text-xs font-bold text-ink/40">01</span>
+          </div>
+          <h3 class="font-display text-lg font-extrabold uppercase">Диалог на равных</h3>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Вместо бесполезных скандалов — аргументированные переговоры с завучами и директором. Умение слушать и отстаивать позиции учеников.
+          </p>
+        </div>
+
+        <div class="poster-card rounded-2xl p-6 sm:p-7 space-y-4 reveal bg-ink text-paper" style="background-color: var(--ink); box-shadow: 6px 6px 0 0 var(--signal);">
+          <div class="flex items-center justify-between">
+            <div class="w-14 h-14 rounded-full bg-signal border-2 border-paper flex items-center justify-center text-2xl">🛡️</div>
+            <span class="font-mono text-xs font-bold text-paper/40">02</span>
+          </div>
+          <h3 class="font-display text-lg font-extrabold uppercase">Защита интересов</h3>
+          <p class="text-sm text-paper/75 font-medium leading-relaxed">
+            Совет станет органом защиты: отстаивание прав школьников при дисциплинарных разборах и замена выговоров полезным трудом.
+          </p>
+        </div>
+
+        <div class="poster-card rounded-2xl p-6 sm:p-7 space-y-4 reveal">
+          <div class="flex items-center justify-between">
+            <div class="w-14 h-14 rounded-full bg-emerald-200 border-2 border-ink flex items-center justify-center text-2xl">⚡</div>
+            <span class="font-mono text-xs font-bold text-ink/40">03</span>
+          </div>
+          <h3 class="font-display text-lg font-extrabold uppercase">Только конкретика</h3>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Решение очередей в столовой, банк знаний для сдачи ОГЭ/ЕГЭ и организация киберспортивных турниров без лишней бюрократии.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 9 ШАГОВ ПРОГРАММЫ -->
+    <section id="program" class="space-y-8">
+
+      <div class="text-center max-w-3xl mx-auto space-y-3 reveal">
+        <div class="eyebrow text-signal justify-center">Платформа кандидата</div>
+        <h2 class="font-display text-3xl sm:text-5xl font-black uppercase leading-[1.05]">
+          <span class="marker">9</span> Реальных Шагов Совета
+        </h2>
+        <p class="text-sm sm:text-base text-ink/70 font-medium">
+          Конкретные и выполнимые инициативы для реального улучшения школьной жизни.
+        </p>
+      </div>
+
+      <!-- Фильтры категорий -->
+      <div class="flex items-center justify-center gap-2 flex-wrap text-xs font-extrabold uppercase tracking-wide reveal">
+        <button class="prog-tab-btn is-active px-4 py-2.5 rounded-full" data-category="all">Все шаги (9)</button>
+        <button class="prog-tab-btn px-4 py-2.5 rounded-full" data-category="canteen">Столовая и быт</button>
+        <button class="prog-tab-btn px-4 py-2.5 rounded-full" data-category="rights">Защита и права</button>
+        <button class="prog-tab-btn px-4 py-2.5 rounded-full" data-category="study">Учеба и экзамены</button>
+        <button class="prog-tab-btn px-4 py-2.5 rounded-full" data-category="fun">Турниры и движ</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="programGrid">
+
+        <!-- Шаг 01 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="canteen" style="--accent:#ea580c">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🥐 Шаг 01</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Ликвидация очередей в столовой</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">01</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Внедрение второго терминала безналичной оплаты и утренней публикации меню в Telegram-канале, чтобы не создавать заторы на кассе.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Реализация:</strong> Официальная заявка на второй терминал эквайринга от банка-партнера.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 02 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="fun" style="--accent:#9333ea">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🎓 Шаг 02</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Больше Дней самоуправления</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">02</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Не один формальный день в году для галочки, а регулярная практика старших классов с передачей управления уроками.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Реализация:</strong> 2 общешкольных дня самоуправления в год (осень и весна) под эгидой профориентации.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 03 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="rights" style="--accent:#253ea1">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🏛️ Шаг 03</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Реальный школьный совет</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">03</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Превращение совета из декорации в настоящий орган защиты интересов и прав учеников перед администрацией.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Реализация:</strong> Участие представителя совета в заседаниях по распорядку с правом совещательного голоса.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 04 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="study" style="--accent:#059669">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">💡 Шаг 04</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Предложка и канал инициатив</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">04</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Каждый ученик должен видеть, что его идея принята в работу, а не проигнорирована. Прозрачный трекер статусов.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Формат:</strong> Telegram-канал со статусами: «Предложено → Переговоры с завучем → Выполнено».</div>
+            <div class="step-note is-accent rounded-r-lg"><strong style="color:var(--accent)">Голосование:</strong> Еженедельный опрос параллелей за лучшие школьные предложения недели.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 05 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="study" style="--accent:#d97706">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">📚 Шаг 05</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Школьный Банк Знаний (ОГЭ / ЕГЭ)</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">05</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Единая проверенная база знаний для 9–11 классов: конспекты медалистов, разборы капканов и шпаргалки формул.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Наполнение:</strong> Конспекты медалистов, сливы пробников, памятки по СанПиН против перегрузок.</div>
+            <div class="step-note is-accent rounded-r-lg"><strong style="color:var(--accent)">Наставничество:</strong> Разборы сложных олимпиадных тем старшеклассниками для младших.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 06 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="rights" style="--accent:#0891b2">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🛡️ Шаг 06</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Анонимный бот поддержки</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">06</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Безопасный мост связи для тех, кто боится говорить открыто, а также школьная почта взаимопомощи.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Защита от буллинга:</strong> Возможность анонимно передать сигнал о травле или конфликте без риска огласки.</div>
+            <div class="step-note is-accent rounded-r-lg"><strong style="color:var(--accent)">Школьная почта:</strong> Анонимные открытки и поддержка одноклассникам перед пробниками и сессиями.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 07 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="rights" style="--accent:#e11d48">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🎤 Шаг 07</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Q&amp;A-сессии с директором</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">07</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Открытый круглый стол раз в четверть под протокол вместо слухов, кулуарных споров и недопонимания.
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Реализация:</strong> 45-минутная встреча в актовом зале с предварительно отобранными вопросами.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 08 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4" data-category="rights" style="--accent:#4f46e5">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🤝 Шаг 08</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Амнистия и поручительство</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">08</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Защита от докладных и вызовов родителей за мелкие оплошности (забыл сменку или разово опоздал).
+          </p>
+          <div class="pt-3 border-t-2 border-dashed border-ink/15 text-xs space-y-2">
+            <div class="step-note"><strong>Поручительство:</strong> Совет берет ученика на поруки с закрытием косяка полезным трудом (библиотека, стенды, актовый зал).</div>
+            <div class="step-note is-accent rounded-r-lg"><strong style="color:var(--accent)">Аргумент завучам:</strong> Воспитание делом и помощью школе вместо бесполезных выговоров и скандалов.</div>
+          </div>
+        </article>
+
+        <!-- Шаг 09 -->
+        <article class="prog-card poster-card rounded-2xl p-6 sm:p-7 pl-8 sm:pl-9 space-y-4 md:col-span-2" data-category="fun" style="--accent:#16a34a">
+          <div class="flex items-start justify-between gap-4">
+            <div class="space-y-2">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.14em]" style="color:var(--accent)">🎮 Шаг 09</span>
+              <h3 class="font-display text-base sm:text-lg font-extrabold leading-snug">Турниры по играм и киберспорту</h3>
+            </div>
+            <span class="step-num text-6xl sm:text-7xl shrink-0">09</span>
+          </div>
+          <p class="text-sm text-ink/70 font-medium leading-relaxed">
+            Официальные лиги по киберспорту (CS2 / Dota / Brawl Stars), настольному теннису и быстрым шахматам.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t-2 border-dashed border-ink/15 text-xs">
+            <div class="step-note"><strong>Офлайн в школе:</strong> Чемпионаты по шахматам и настолкам в рекреациях после уроков.</div>
+            <div class="step-note is-accent rounded-r-lg"><strong style="color:var(--accent)">Онлайн в Discord:</strong> Киберспортивные кубки на выходных — не требуют кабинетов и согласий школы!</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР СТОЛОВОЙ -->
+    <section id="calculator" class="reveal">
+      <div class="relative bg-signal text-white rounded-3xl border-2 border-ink p-6 sm:p-10 lg:p-12 overflow-hidden" style="box-shadow: 8px 8px 0 0 var(--ink);">
+
+        <div aria-hidden="true" class="absolute -right-6 -top-10 font-display font-black text-[11rem] sm:text-[16rem] leading-none text-white/10 select-none pointer-events-none">№1</div>
+
+        <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+          <div class="lg:col-span-5 space-y-3">
+            <span class="inline-block bg-ink text-paper px-3.5 py-1.5 rounded-full font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
+              Бытовая проблема №1
+            </span>
+            <h2 class="font-display text-2xl sm:text-4xl font-black uppercase leading-[1.08]">
+              Очередь в столовой съедает твою жизнь
+            </h2>
+            <p class="text-white/90 text-sm sm:text-base font-semibold">
+              Посчитай, сколько уроков и перемен сгорает в давке за учебный год:
+            </p>
+          </div>
+
+          <div class="lg:col-span-7 bg-paper rounded-2xl border-2 border-ink p-5 sm:p-7 text-ink space-y-5">
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <label for="queueSlider" class="font-extrabold text-sm uppercase leading-snug">
+                Сколько минут ты стоишь в очереди каждый день?
+              </label>
+              <span id="sliderMinutesDisplay" class="font-mono text-lg font-extrabold text-white bg-ink px-3.5 py-1 rounded-full w-max shrink-0">
+                15 мин / день
+              </span>
+            </div>
+
+            <input id="queueSlider" type="range" min="5" max="30" value="15" step="1"
+                   class="w-full" aria-label="Время в очереди в столовой">
+
+            <div class="flex justify-between gap-2 font-mono text-[10px] sm:text-[11px] font-bold text-ink/50">
+              <span>5 мин (быстро)</span>
+              <span class="text-center">15 мин (стандарт)</span>
+              <span class="text-right">30 мин (вся большая перемена!)</span>
+            </div>
+
+            <div class="pt-4 border-t-2 border-dashed border-ink/15 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-ink text-paper">
+                <div class="font-mono text-[10px] font-bold text-sky uppercase tracking-[0.14em]">Потеряно за год:</div>
+                <div id="calcLostYear" class="font-display text-3xl sm:text-4xl font-black text-signal mt-1">43.8 ч</div>
+                <div id="calcLostQuarter" class="text-xs text-paper/60 font-semibold mt-1">~11 ч за четверть</div>
+              </div>
+
+              <div class="p-4 rounded-xl border-2 border-ink bg-white">
+                <div class="font-mono text-[10px] font-bold text-ink/50 uppercase tracking-[0.14em]">Это равноценно:</div>
+                <div id="calcMovies" class="font-display text-2xl sm:text-3xl font-black mt-1">22 фильмам</div>
+                <div class="text-xs text-ink/60 font-semibold mt-1">или <span id="calcGames">66 каткам</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЦИТАТА -->
+    <section class="reveal">
+      <figure class="relative max-w-4xl mx-auto text-center px-2 sm:px-8 py-6">
+        <span aria-hidden="true" class="block font-display font-black text-8xl sm:text-9xl leading-[0.6] text-signal">“</span>
+        <blockquote class="font-display text-xl sm:text-3xl font-extrabold uppercase leading-[1.25] mt-4">
+          Лучший способ предсказать будущее — создать его самим. Через 45 минут дебаты закончатся, и у каждого будет выбор: поверить в пустые сказки или выбрать <span class="marker">четкий план действий.</span>
+        </blockquote>
+        <figcaption class="pt-8 flex items-center justify-center gap-4">
+          <span class="h-0.5 w-10 bg-ink"></span>
+          <span class="text-left">
+            <span class="block font-display text-sm sm:text-base font-extrabold uppercase">Александр Припачкин</span>
+            <span class="block font-mono text-[11px] font-bold text-ink/50 uppercase tracking-[0.12em]">Кандидат в Президенты Совета</span>
+          </span>
+          <span class="h-0.5 w-10 bg-ink"></span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ОПРОС -->
+    <section id="poll" class="reveal">
+      <div class="poster-card rounded-3xl p-6 sm:p-10 space-y-6" style="transform:none">
+
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div class="space-y-3">
+            <div class="eyebrow text-signal">Твой голос решает</div>
+            <h3 class="font-display text-2xl sm:text-4xl font-black uppercase leading-[1.08]">
+              Что нужно решить в школе первым делом?
+            </h3>
+          </div>
+          <span id="pollTotalLabel" class="font-mono text-xs font-bold text-paper bg-ink px-3.5 py-1.5 rounded-full w-max shrink-0">
+            106 ответов
+          </span>
+        </div>
+
+        <p class="text-sm text-ink/60 font-medium">
+          Голосование анонимно. Выбери самый важный пункт, чтобы повлиять на повестку переговоров:
+        </p>
+
+        <div class="space-y-3" id="pollOptionsContainer">
+
+          <button class="poll-vote-btn w-full p-4 sm:p-5 rounded-xl text-left relative overflow-hidden">
+            <div class="poll-bar absolute inset-y-0 left-0 transition-all duration-700 w-0"></div>
+            <div class="relative flex items-center justify-between gap-3 text-sm font-extrabold">
+              <span>🥐 Разобраться с очередями в столовой</span>
+              <span class="poll-percent font-display font-black text-lg opacity-0 transition-opacity">40%</span>
+            </div>
+          </button>
+
+          <button class="poll-vote-btn w-full p-4 sm:p-5 rounded-xl text-left relative overflow-hidden">
+            <div class="poll-bar absolute inset-y-0 left-0 transition-all duration-700 w-0"></div>
+            <div class="relative flex items-center justify-between gap-3 text-sm font-extrabold">
+              <span>📚 Открыть банк знаний для экзаменов (ОГЭ/ЕГЭ)</span>
+              <span class="poll-percent font-display font-black text-lg opacity-0 transition-opacity">26%</span>
+            </div>
+          </button>
+
+          <button class="poll-vote-btn w-full p-4 sm:p-5 rounded-xl text-left relative overflow-hidden">
+            <div class="poll-bar absolute inset-y-0 left-0 transition-all duration-700 w-0"></div>
+            <div class="relative flex items-center justify-between gap-3 text-sm font-extrabold">
+              <span>🤝 Ввести поручительство и амнистию за мелкие оплошности</span>
+              <span class="poll-percent font-display font-black text-lg opacity-0 transition-opacity">19%</span>
+            </div>
+          </button>
+
+          <button class="poll-vote-btn w-full p-4 sm:p-5 rounded-xl text-left relative overflow-hidden">
+            <div class="poll-bar absolute inset-y-0 left-0 transition-all duration-700 w-0"></div>
+            <div class="relative flex items-center justify-between gap-3 text-sm font-extrabold">
+              <span>🎮 Запустить школьные кибертурниры и лиги по настолкам</span>
+              <span class="poll-percent font-display font-black text-lg opacity-0 transition-opacity">15%</span>
+            </div>
+          </button>
+
+        </div>
+
+        <p id="pollDoneMessage" class="hidden text-sm text-center font-extrabold text-emerald-700 pt-1">
+          ✓ Твой голос принят и зафиксирован в статистике опроса!
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ПРЕДЛОЖКА В ШТАБ -->
+    <section id="suggestions" class="reveal">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+
+        <div class="lg:col-span-5 space-y-4">
+          <div class="eyebrow text-signal">Прямая связь со штабом</div>
+          <h2 class="font-display text-3xl sm:text-4xl font-black uppercase leading-[1.08]">
+            Есть своя идея для <span class="marker">школы?</span>
+          </h2>
+          <p class="text-sm sm:text-base text-ink/70 font-medium leading-relaxed">
+            Напиши напрямую в штаб. Мы включим самые толковые мысли в официальную повестку переговоров с директором:
+          </p>
+        </div>
+
+        <form id="suggestionForm" class="lg:col-span-7 poster-card rounded-3xl p-6 sm:p-8 space-y-4" style="transform:none">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="sugCategorySelect" class="block font-mono text-[11px] font-bold text-ink/60 mb-1.5 uppercase tracking-[0.12em]">Категория:</label>
+              <select id="sugCategorySelect" class="field text-sm">
+                <option value="Столовая и питание">Столовая и питание</option>
+                <option value="Контрольные и расписание">Контрольные и расписание уроков</option>
+                <option value="Защита прав учеников">Защита прав учеников и амнистия</option>
+                <option value="Турниры и движ">Турниры и внеурочные события</option>
+                <option value="Комфорт и рекреации">Бытовой комфорт и рекреации</option>
+                <option value="Другое">Другое предложение</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="sugAuthorInput" class="block font-mono text-[11px] font-bold text-ink/60 mb-1.5 uppercase tracking-[0.12em]">Твой класс / имя (необязательно):</label>
+              <input id="sugAuthorInput" type="text" placeholder="Например: 10-А класс или Имя" class="field text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="sugTextInput" class="block font-mono text-[11px] font-bold text-ink/60 mb-1.5 uppercase tracking-[0.12em]">Суть предложения:</label>
+            <textarea id="sugTextInput" rows="4" required placeholder="Например: Поставить кулер с водой на 3 этаже, разрешить сидеть на пуфиках в библиотеке..." class="field text-sm resize-none"></textarea>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+            <div class="flex items-center gap-2.5">
+              <input id="sugAnonCheck" type="checkbox" class="w-5 h-5 rounded border-2 border-ink accent-[#ff4d1f]">
+              <label for="sugAnonCheck" class="text-sm font-bold text-ink/70 cursor-pointer select-none">
+                Отправить строго анонимно
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary py-3.5 px-7 rounded-full text-xs uppercase flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>Отправить в штаб</span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ПОДВАЛ -->
+  <footer class="hero on-dark mt-20 sm:mt-28 border-t-2 border-ink">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+
+        <div class="md:col-span-7 space-y-5 text-center md:text-left">
+          <h3 class="font-display text-2xl sm:text-4xl font-black uppercase leading-[1.08]">
+            Покажи этот сайт другу с экрана телефона
+          </h3>
+          <p class="text-sm text-paper/70 font-medium max-w-md mx-auto md:mx-0">
+            Одноклассник может навести камеру смартфона на этот QR-код прямо сейчас на перемене:
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+            <button data-action-share class="btn-primary py-3 px-5 rounded-full text-xs uppercase flex items-center gap-2">
+              <i data-lucide="share" class="w-3.5 h-3.5"></i>
+              <span>В беседу класса</span>
+            </button>
+
+            <button data-action-copy class="btn-ghost py-3 px-5 rounded-full text-xs uppercase flex items-center gap-2">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span>Скопировать ссылку</span>
+            </button>
+
+            <button data-action-print class="btn-ghost py-3 px-5 rounded-full text-xs uppercase flex items-center gap-2">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Печать листовки (A4)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 flex justify-center md:justify-end">
+          <div class="p-5 rounded-2xl bg-paper text-ink border-2 border-paper rotate-2 hover:rotate-0 transition-transform" style="box-shadow: 8px 8px 0 0 var(--signal);">
+            <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="QR-код сайта кандидата">
+          <rect x="5" y="5" width="26" height="26" rx="6" fill="#112576" />
+          <rect x="9" y="9" width="18" height="18" rx="3" fill="white" />
+          <rect x="13" y="13" width="10" height="10" rx="2" fill="#253ea1" />
+          <rect x="69" y="5" width="26" height="26" rx="6" fill="#112576" />
+          <rect x="73" y="9" width="18" height="18" rx="3" fill="white" />
+          <rect x="77" y="13" width="10" height="10" rx="2" fill="#253ea1" />
+          <rect x="5" y="69" width="26" height="26" rx="6" fill="#112576" />
+          <rect x="9" y="73" width="18" height="18" rx="3" fill="white" />
+          <rect x="13" y="77" width="10" height="10" rx="2" fill="#253ea1" />
+          <rect x="36" y="8" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="46" y="8" width="6" height="6" rx="1.5" fill="#253ea1" />
+          <rect x="56" y="8" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="36" y="18" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="46" y="24" width="6" height="6" rx="1.5" fill="#ea580c" />
+          <rect x="56" y="18" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="8" y="36" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="18" y="44" width="6" height="6" rx="1.5" fill="#253ea1" />
+          <rect x="8" y="52" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="36" y="36" width="8" height="8" rx="2" fill="#253ea1" />
+          <rect x="48" y="36" width="8" height="8" rx="2" fill="#112576" />
+          <rect x="42" y="48" width="16" height="16" rx="3" fill="#253ea1" />
+          <circle cx="50" cy="56" r="3" fill="white" />
+          <rect x="68" y="36" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="80" y="44" width="6" height="6" rx="1.5" fill="#253ea1" />
+          <rect x="88" y="36" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="36" y="68" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="46" y="74" width="6" height="6" rx="1.5" fill="#ea580c" />
+          <rect x="36" y="82" width="6" height="6" rx="1.5" fill="#253ea1" />
+          <rect x="56" y="82" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="68" y="68" width="6" height="6" rx="1.5" fill="#112576" />
+          <rect x="80" y="74" width="6" height="6" rx="1.5" fill="#253ea1" />
+          <rect x="74" y="84" width="6" height="6" rx="1.5" fill="#ea580c" />
+          <rect x="86" y="86" width="6" height="6" rx="1.5" fill="#112576" />
+        </svg>
+            <div class="mt-3 text-center font-mono text-[10px] font-bold text-ink/60 uppercase tracking-[0.14em]">
+              Выборы 2026 • Сканируй камерой
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-14 pt-6 border-t border-paper/15 font-mono text-[11px] text-paper/50 font-bold uppercase tracking-wider flex flex-col sm:flex-row items-center justify-between gap-2 text-center">
+        <span>Предвыборная кампания • Школьное Самоуправление</span>
+        <span>Шаблон Wix wh-1043 «Политический кандидат» • 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ФИКСИРОВАННАЯ НИЖНЯЯ ПАНЕЛЬ ДЛЯ ТЕЛЕФОНОВ -->
+  <aside id="mobileBar" class="md:hidden fixed bottom-0 inset-x-0 z-50 p-2.5 bg-paper/95 backdrop-blur-md border-t-2 border-ink">
+    <div class="flex items-center gap-2 max-w-md mx-auto">
+      <button id="voteMobileBtn" class="flex-1 btn-primary py-3 px-4 rounded-full text-xs uppercase flex items-center justify-center gap-2" style="box-shadow:3px 3px 0 0 var(--ink)">
+        <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
+        <span class="vote-btn-text">Отдать голос</span>
+      </button>
+
+      <a href="#suggestions" class="p-3 rounded-full bg-white text-ink border-2 border-ink active:scale-95 transition" aria-label="Предложить идею">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+      </a>
+
+      <button data-action-share class="p-3 rounded-full bg-ink text-paper border-2 border-ink active:scale-95 transition" aria-label="Поделиться сайтом">
+        <i data-lucide="share-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ТОАСТ УВЕДОМЛЕНИЙ -->
+  <aside id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4">
+    <div class="px-5 py-3 rounded-full bg-ink text-paper text-xs sm:text-sm font-extrabold flex items-center gap-2.5 border-2 border-ink" style="box-shadow:4px 4px 0 0 var(--signal)">
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toastMessageText">Действие выполнено</span>
+    </div>
+  </aside>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
