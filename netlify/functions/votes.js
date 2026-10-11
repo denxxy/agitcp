@@ -8,7 +8,7 @@
  * POST /api/votes (unvote)  -> { success: true, count: 0 }
  */
 
-const FALLBACK_DB_URL = 'postgresql://netlifydb_owner:npg_FS7tiCvW2uon@ep-curly-lake-b56agdrk.c-7.us-east-2.db.netlify.com/netlifydb?sslmode=require';
+const FALLBACK_DB_URL = 'postgresql://netlifydb_owner:npg_TqUHPm4RK1cG@ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/netlifydb?sslmode=require';
 const DB_URL = process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL || FALLBACK_DB_URL;
 
 let isInitialized = false;
@@ -18,7 +18,7 @@ function getSqlEndpoint(connectionString) {
     const url = new URL(connectionString.replace(/^postgres(ql)?:/, 'http:'));
     return `https://${url.host}/sql`;
   } catch (e) {
-    return 'https://ep-curly-lake-b56agdrk.c-7.us-east-2.db.netlify.com/sql';
+    return 'https://ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/sql';
   }
 }
 
