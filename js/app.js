@@ -71,11 +71,12 @@ const CountdownManager = {
 };
 
 /* ==========================================================================
-   2. СЧЕТЧИК ГОЛОСОВ: ПОДКЛЮЧЕНИЕ К POSTGRESQL (GITHUB PAGES / NETLIFY / NEON)
+   2. СЧЕТЧИК ГОЛОСОВ: ПОДКЛЮЧЕНИЕ К SQLITE CLOUD (GITHUB PAGES)
    ========================================================================== */
 const VoteManager = {
-  dbEndpoint: 'https://ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/sql',
-  dbConn: 'postgresql://netlifydb_owner:npg_TqUHPm4RK1cG@ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/netlifydb?sslmode=require',
+  dbEndpoint: 'https://ckjx7bu9vk.g4.gateway.sqlite.cloud/v2/weblite/sql',
+  apiKey: 'oa2Cu9xxaKa6n1wGBFEnHp6g5yiOp91c8hwatlPMMhs',
+  dbName: 'auth.sqlitecloud',
   syncIntervalMs: 25000,
   syncTimer: null,
   isSyncing: false,
@@ -84,10 +85,13 @@ const VoteManager = {
     const res = await fetch(this.dbEndpoint, {
       method: 'POST',
       headers: {
-        'Neon-Connection-String': this.dbConn,
+        'Authorization': `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ query: sql })
+      body: JSON.stringify({
+        sql: sql,
+        database: this.dbName
+      })
     });
     if (!res.ok) throw new Error('DB error ' + res.status);
     return await res.json();
@@ -126,10 +130,9 @@ const VoteManager = {
 
   async fetchLiveVotes() {
     try {
-      const data = await this.queryDb('SELECT count FROM candidate_votes WHERE id = 1;');
-      if (data && data.rows && data.rows.length > 0) {
-        const count = Number(data.rows[0].count);
-        this.setVoteCount(count);
+      const result = await this.queryDb('SELECT count FROM candidate_votes WHERE id = 1;');
+      if (result && Array.isArray(result.data) && result.data[0] && typeof result.data[0].count === 'number') {
+        this.setVoteCount(result.data[0].count);
       }
     } catch (e) {
       console.warn('Live votes fetch notice:', e.message);
@@ -153,7 +156,7 @@ const VoteManager = {
     let count = this.getVoteCount();
     const sql = !voted
       ? 'UPDATE candidate_votes SET count = count + 1 WHERE id = 1 RETURNING count;'
-      : 'UPDATE candidate_votes SET count = GREATEST(0, count - 1) WHERE id = 1 RETURNING count;';
+      : 'UPDATE candidate_votes SET count = MAX(0, count - 1) WHERE id = 1 RETURNING count;';
 
     // Оптимистичный отклик в интерфейсе
     if (!voted) {
@@ -169,11 +172,11 @@ const VoteManager = {
       Toast.show('Голос отозван');
     }
 
-    // Запись в базу данных PostgreSQL через HTTPS API
+    // Запись в базу данных SQLite Cloud через Weblite API
     try {
-      const data = await this.queryDb(sql);
-      if (data && data.rows && data.rows.length > 0) {
-        this.setVoteCount(Number(data.rows[0].count));
+      const result = await this.queryDb(sql);
+      if (result && Array.isArray(result.data) && result.data[0] && typeof result.data[0].count === 'number') {
+        this.setVoteCount(result.data[0].count);
       }
     } catch (err) {
       console.warn('Database vote write notice:', err.message);
