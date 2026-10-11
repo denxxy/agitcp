@@ -71,13 +71,27 @@ const CountdownManager = {
 };
 
 /* ==========================================================================
-   2. СЧЕТЧИК ГОЛОСОВ: СТРОГО С 0 И ПОДКЛЮЧЕНИЕ К POSTGRESQL (NETLIFY / NEON)
+   2. СЧЕТЧИК ГОЛОСОВ: ПОДКЛЮЧЕНИЕ К POSTGRESQL (GITHUB PAGES / NETLIFY / NEON)
    ========================================================================== */
 const VoteManager = {
-  apiUrl: '/api/votes',
+  dbEndpoint: 'https://ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/sql',
+  dbConn: 'postgresql://netlifydb_owner:npg_TqUHPm4RK1cG@ep-still-river-b54g7nl0.c-7.us-east-2.db.netlify.com/netlifydb?sslmode=require',
   syncIntervalMs: 25000,
   syncTimer: null,
   isSyncing: false,
+
+  async queryDb(sql) {
+    const res = await fetch(this.dbEndpoint, {
+      method: 'POST',
+      headers: {
+        'Neon-Connection-String': this.dbConn,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: sql })
+    });
+    if (!res.ok) throw new Error('DB error ' + res.status);
+    return await res.json();
+  },
 
   init() {
     this.updateUI();
@@ -112,18 +126,13 @@ const VoteManager = {
 
   async fetchLiveVotes() {
     try {
-      const response = await fetch(this.apiUrl, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data && typeof data.count === 'number') {
-          this.setVoteCount(data.count);
-        }
+      const data = await this.queryDb('SELECT count FROM candidate_votes WHERE id = 1;');
+      if (data && data.rows && data.rows.length > 0) {
+        const count = Number(data.rows[0].count);
+        this.setVoteCount(count);
       }
     } catch (e) {
-      console.warn('Live votes fetch skipped (offline/static):', e.message);
+      console.warn('Live votes fetch notice:', e.message);
     }
   },
 
@@ -142,7 +151,9 @@ const VoteManager = {
 
     const voted = this.hasVoted();
     let count = this.getVoteCount();
-    const action = voted ? 'unvote' : 'vote';
+    const sql = !voted
+      ? 'UPDATE candidate_votes SET count = count + 1 WHERE id = 1 RETURNING count;'
+      : 'UPDATE candidate_votes SET count = GREATEST(0, count - 1) WHERE id = 1 RETURNING count;';
 
     // Оптимистичный отклик в интерфейсе
     if (!voted) {
@@ -158,22 +169,11 @@ const VoteManager = {
       Toast.show('Голос отозван');
     }
 
-    // Запись в базу данных PostgreSQL
+    // Запись в базу данных PostgreSQL через HTTPS API
     try {
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ action })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data && typeof data.count === 'number') {
-          this.setVoteCount(data.count);
-        }
+      const data = await this.queryDb(sql);
+      if (data && data.rows && data.rows.length > 0) {
+        this.setVoteCount(Number(data.rows[0].count));
       }
     } catch (err) {
       console.warn('Database vote write notice:', err.message);
