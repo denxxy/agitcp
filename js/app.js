@@ -1,12 +1,10 @@
 /**
  * Школьные Выборы 2026 — Главный Модуль Интерактивности
- * Поддержка загрузки фото кандидата, гармоничное масштабирование,
- * счетчик от 0, 9 шагов программы, опрос и предложка.
+ * Счетчик голосов от 0, таймер, 9 шагов программы, опрос,
+ * предложка и анимация появления блоков.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  PhotoManager.init();
-  CandidateManager.init();
   CountdownManager.init();
   VoteManager.init();
   QueueCalculator.init();
@@ -14,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   PollManager.init();
   SuggestionManager.init();
   ShareManager.init();
+  RevealManager.init();
 
   if (window.lucide) {
     window.lucide.createIcons();
@@ -21,168 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. МЕНЕДЖЕР ФОТО КАНДИДАТА (ЗАГРУЗКА И ОТОБРАЖЕНИЕ)
-   ========================================================================== */
-const PhotoManager = {
-  storageKey: 'candidate_photo_data',
-  defaultPhoto: 'images/candidate-photo.svg',
-
-  init() {
-    this.applyPhoto();
-    this.setupListeners();
-  },
-
-  applyPhoto() {
-    const saved = localStorage.getItem(this.storageKey) || this.defaultPhoto;
-    const photoEl = document.getElementById('candidatePhoto');
-    if (photoEl) {
-      photoEl.src = saved;
-    }
-  },
-
-  setPhoto(dataUrl) {
-    localStorage.setItem(this.storageKey, dataUrl);
-    this.applyPhoto();
-    Toast.show('Фото кандидата успешно обновлено! 📸');
-  },
-
-  resetPhoto() {
-    localStorage.removeItem(this.storageKey);
-    this.applyPhoto();
-    Toast.show('Установлено фото по умолчанию');
-  },
-
-  setupListeners() {
-    const fileInput = document.getElementById('candidatePhotoInput');
-    const modalFileInput = document.getElementById('modalPhotoInput');
-    const clickArea = document.getElementById('photoClickArea');
-    const uploadBtn = document.getElementById('uploadPhotoBtn');
-    const resetBtn = document.getElementById('resetPhotoBtn');
-
-    if (clickArea && fileInput) {
-      clickArea.addEventListener('click', () => fileInput.click());
-    }
-
-    if (uploadBtn && fileInput) {
-      uploadBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.click();
-      });
-    }
-
-    if (resetBtn) {
-      resetBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.resetPhoto();
-      });
-    }
-
-    const handleFile = (input) => {
-      if (!input || !input.files || !input.files[0]) return;
-      const file = input.files[0];
-
-      if (!file.type.startsWith('image/')) {
-        Toast.show('Пожалуйста, выберите файл изображения (JPG, PNG, WebP)');
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        Toast.show('Размер файла не должен превышать 5 МБ');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.setPhoto(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    };
-
-    if (fileInput) {
-      fileInput.addEventListener('change', () => handleFile(fileInput));
-    }
-
-    if (modalFileInput) {
-      modalFileInput.addEventListener('change', () => handleFile(modalFileInput));
-    }
-  }
-};
-
-/* ==========================================================================
-   2. МЕНЕДЖЕР КАНДИДАТА И КАСТОМИЗАЦИИ
-   ========================================================================== */
-const CandidateManager = {
-  defaults: {
-    name: 'Александр Припач',
-    grade: '10 Класс',
-    motto: '«Чем больше контроль, тем больше сопротивление»',
-    role: 'Кандидат в Президенты Совета'
-  },
-
-  init() {
-    this.loadProfile();
-    this.setupListeners();
-  },
-
-  loadProfile() {
-    const name = localStorage.getItem('cand_name') || this.defaults.name;
-    const grade = localStorage.getItem('cand_grade') || this.defaults.grade;
-    const motto = localStorage.getItem('cand_motto') || this.defaults.motto;
-
-    this.applyToDOM(name, grade, motto);
-  },
-
-  applyToDOM(name, grade, motto) {
-    document.querySelectorAll('[data-cand-name]').forEach(el => el.textContent = name);
-    document.querySelectorAll('[data-cand-grade]').forEach(el => el.textContent = grade);
-    document.querySelectorAll('[data-cand-motto]').forEach(el => el.textContent = motto);
-  },
-
-  setupListeners() {
-    const editBtn = document.getElementById('editCandidateBtn');
-    const modal = document.getElementById('candidateModal');
-    const form = document.getElementById('candidateEditForm');
-    const closeBtn = document.getElementById('closeModalBtn');
-
-    if (editBtn && modal) {
-      editBtn.addEventListener('click', () => {
-        const nameInput = document.getElementById('modalNameInput');
-        const gradeInput = document.getElementById('modalGradeInput');
-        const mottoInput = document.getElementById('modalMottoInput');
-
-        if (nameInput) nameInput.value = localStorage.getItem('cand_name') || this.defaults.name;
-        if (gradeInput) gradeInput.value = localStorage.getItem('cand_grade') || this.defaults.grade;
-        if (mottoInput) mottoInput.value = localStorage.getItem('cand_motto') || this.defaults.motto;
-
-        modal.showModal();
-      });
-    }
-
-    if (closeBtn && modal) {
-      closeBtn.addEventListener('click', () => modal.close());
-    }
-
-    if (form && modal) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newName = document.getElementById('modalNameInput')?.value.trim() || this.defaults.name;
-        const newGrade = document.getElementById('modalGradeInput')?.value.trim() || this.defaults.grade;
-        const newMotto = document.getElementById('modalMottoInput')?.value.trim() || this.defaults.motto;
-
-        localStorage.setItem('cand_name', newName);
-        localStorage.setItem('cand_grade', newGrade);
-        localStorage.setItem('cand_motto', newMotto);
-
-        this.applyToDOM(newName, newGrade, newMotto);
-        modal.close();
-        Toast.show('Данные кандидата успешно обновлены!');
-      });
-    }
-  }
-};
-
-/* ==========================================================================
-   3. ОБРАТНЫЙ ОТСЧЕТ ДО ДЕБАТОВ
+   1. ОБРАТНЫЙ ОТСЧЕТ ДО ДЕБАТОВ
    ========================================================================== */
 const CountdownManager = {
   storageKey: 'school_target_election_time',
@@ -233,18 +71,20 @@ const CountdownManager = {
 };
 
 /* ==========================================================================
-   4. СЧЕТЧИК ГОЛОСОВ: БАЗА ДАННЫХ POSTGRESQL (NETLIFY / NEON) + КОНФЕТТИ
+   2. СЧЕТЧИК ГОЛОСОВ: СТРОГО С 0 И КОНФЕТТИ
    ========================================================================== */
 const VoteManager = {
-  apiUrl: '/api/votes',
-  syncIntervalMs: 25000,
-  syncTimer: null,
-  isSyncing: false,
+  baseVotes: 0,
 
   init() {
+    const stored = localStorage.getItem('candidate_votes_count');
+    if (stored === null || parseInt(stored, 10) > 10) {
+      const userVoted = localStorage.getItem('user_has_voted') === 'true';
+      const initial = userVoted ? 1 : 0;
+      localStorage.setItem('candidate_votes_count', initial);
+    }
+
     this.updateUI();
-    this.fetchLiveVotes();
-    this.startPeriodicSync();
 
     const mainBtn = document.getElementById('votePrimaryBtn');
     const navBtn = document.getElementById('voteNavBtn');
@@ -267,81 +107,24 @@ const VoteManager = {
     return stored !== null ? parseInt(stored, 10) : 0;
   },
 
-  setVoteCount(count) {
-    localStorage.setItem('candidate_votes_count', Math.max(0, count));
-    this.updateUI();
-  },
-
-  async fetchLiveVotes() {
-    try {
-      const response = await fetch(this.apiUrl, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data && typeof data.count === 'number') {
-          this.setVoteCount(data.count);
-        }
-      }
-    } catch (e) {
-      console.warn('Live votes fetch skipped (offline or static mode):', e.message);
-    }
-  },
-
-  startPeriodicSync() {
-    if (this.syncTimer) clearInterval(this.syncTimer);
-    this.syncTimer = setInterval(() => {
-      if (!this.isSyncing) {
-        this.fetchLiveVotes();
-      }
-    }, this.syncIntervalMs);
-  },
-
-  async handleVoteToggle() {
-    if (this.isSyncing) return;
-    this.isSyncing = true;
-
+  handleVoteToggle() {
     const voted = this.hasVoted();
     let count = this.getVoteCount();
-    const action = voted ? 'unvote' : 'vote';
 
-    // 1. Мгновенное оптимистичное обновление интерфейса
     if (!voted) {
       localStorage.setItem('user_has_voted', 'true');
       count += 1;
-      this.setVoteCount(count);
+      localStorage.setItem('candidate_votes_count', count);
       this.triggerConfetti();
-      Toast.show('Твой голос за кандидата зафиксирован в базе данных! 🎉');
+      Toast.show('Твой голос за кандидата зафиксирован! 🎉');
     } else {
       localStorage.setItem('user_has_voted', 'false');
       count = Math.max(0, count - 1);
-      this.setVoteCount(count);
+      localStorage.setItem('candidate_votes_count', count);
       Toast.show('Голос отозван');
     }
 
-    // 2. Асинхронная запись в базу данных через Netlify Function
-    try {
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ action })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data && typeof data.count === 'number') {
-          this.setVoteCount(data.count);
-        }
-      }
-    } catch (err) {
-      console.warn('Database vote write notice:', err.message);
-    } finally {
-      this.isSyncing = false;
-    }
+    this.updateUI();
   },
 
   updateUI() {
@@ -362,12 +145,10 @@ const VoteManager = {
       const textSpan = btn.querySelector('.vote-btn-text');
       if (voted) {
         if (textSpan) textSpan.textContent = 'Ты в команде! (Голос за)';
-        btn.classList.add('ring-4', 'ring-emerald-400', 'bg-emerald-600', 'text-white');
-        btn.classList.remove('bg-wix-navy');
+        btn.classList.add('is-voted');
       } else {
         if (textSpan) textSpan.textContent = btn.id === 'voteNavBtn' ? 'Поддержать' : 'Отдать свой голос';
-        btn.classList.remove('ring-4', 'ring-emerald-400', 'bg-emerald-600');
-        btn.classList.add('bg-wix-navy');
+        btn.classList.remove('is-voted');
       }
     });
   },
@@ -400,7 +181,7 @@ const VoteManager = {
 };
 
 /* ==========================================================================
-   5. КАЛЬКУЛЯТОР ВРЕМЕНИ В СТОЛОВОЙ
+   3. КАЛЬКУЛЯТОР ВРЕМЕНИ В СТОЛОВОЙ
    ========================================================================== */
 const QueueCalculator = {
   schoolDaysPerYear: 175,
@@ -444,7 +225,7 @@ const QueueCalculator = {
 };
 
 /* ==========================================================================
-   6. ПРОГРАММА (9 ШАГОВ)
+   4. ПРОГРАММА (9 ШАГОВ)
    ========================================================================== */
 const ProgramManager = {
   init() {
@@ -459,12 +240,8 @@ const ProgramManager = {
       tab.addEventListener('click', () => {
         const category = tab.getAttribute('data-category');
 
-        tabs.forEach(t => {
-          t.classList.remove('bg-wix-navy', 'text-white', 'shadow-md');
-          t.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-        });
-        tab.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-        tab.classList.add('bg-wix-navy', 'text-white', 'shadow-md');
+        tabs.forEach(t => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
 
         cards.forEach(card => {
           const cardCat = card.getAttribute('data-category');
@@ -480,7 +257,7 @@ const ProgramManager = {
 };
 
 /* ==========================================================================
-   7. ОПРОС ИЗБИРАТЕЛЕЙ
+   5. ОПРОС ИЗБИРАТЕЛЕЙ
    ========================================================================== */
 const PollManager = {
   storageKey: 'school_poll_vote_index_wix',
@@ -528,7 +305,7 @@ const PollManager = {
       }
 
       if (idx === selectedIndex) {
-        btn.classList.add('ring-3', 'ring-wix-navy', 'bg-blue-50/60');
+        btn.classList.add('is-selected');
       }
       btn.disabled = true;
       btn.classList.add('cursor-default');
@@ -540,7 +317,7 @@ const PollManager = {
 };
 
 /* ==========================================================================
-   8. ПРЕДЛОЖКА И ОБРАТНАЯ СВЯЗЬ
+   6. ПРЕДЛОЖКА И ОБРАТНАЯ СВЯЗЬ
    ========================================================================== */
 const SuggestionManager = {
   init() {
@@ -566,7 +343,7 @@ const SuggestionManager = {
 };
 
 /* ==========================================================================
-   9. ШЕРИНГ И КОПИРОВАНИЕ
+   7. ШЕРИНГ И КОПИРОВАНИЕ
    ========================================================================== */
 const ShareManager = {
   init() {
@@ -584,7 +361,7 @@ const ShareManager = {
   },
 
   getShareData() {
-    const candName = localStorage.getItem('cand_name') || 'Александр Припач';
+    const candName = 'Александр Припачкин';
     return {
       title: `${candName} — Выборы в Школьное Самоуправление`,
       text: `Голосуй за дела! Программа кандидата: решение очередей в столовой, банк знаний ОГЭ/ЕГЭ, защита прав и турниры.`,
@@ -630,7 +407,31 @@ const ShareManager = {
 };
 
 /* ==========================================================================
-   10. УВЕДОМЛЕНИЯ (TOAST)
+   8. ПОЯВЛЕНИЕ БЛОКОВ ПРИ ПРОКРУТКЕ
+   ========================================================================== */
+const RevealManager = {
+  init() {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(el => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    items.forEach(el => observer.observe(el));
+  }
+};
+
+/* ==========================================================================
+   9. УВЕДОМЛЕНИЯ (TOAST)
    ========================================================================== */
 const Toast = {
   timeoutId: null,
